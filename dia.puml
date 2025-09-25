@@ -1,0 +1,146 @@
+@startuml
+!define MAIN_ENTITY #E3F2FD-000000
+!define CONTROLLER #F3E5F5-000000
+!define SERVICE #E8F5E8-000000
+!define MODEL #FFF3E0-000000
+!define DAO #FBE9E7-000000
+!define UTIL #F5F5F5-000000
+
+package "org.example.carjournal" as main {
+  package "controller" as controller {
+    class MainController << (C,#FF5722) >> {
+      - CarRecordService carRecordService
+      - ObservableList<CarRecord> records
+      + initialize()
+      + setCarRecordService()
+      + handleAddRecord()
+      + handleUpdateRecord()
+      + handleDeleteRecord()
+      + handleSearch()
+      + handleUpdateStatuses()
+      + clearForm()
+    }
+  }
+
+  package "service" as service {
+    class CarRecordService << (S,#4CAF50) >> {
+      - CarRecordDAO carRecordDAO
+      + CarRecordService()
+      + getAllRecords()
+      + getRecordById()
+      + addRecord()
+      + updateRecord()
+      + deleteRecord()
+      + calculateNextMaintenance()
+      + calculateCostPerKm()
+      + findFuelAnomalies()
+      + searchRecords()
+      + filterByStatus()
+      + updateStatuses()
+    }
+  }
+
+  package "model" as model {
+    class CarRecord << (M,#FF9800) >> {
+      - String id
+      - String title
+      - String description
+      - RecordType type
+      - double cost
+      - double mileage
+      - LocalDate date
+      - LocalDate dueDate
+      - RecordStatus status
+      - Priority priority
+      - double fuelAmount
+      - double fuelPrice
+      - List<HistoryEntry> history
+      + addHistoryEntry()
+    }
+
+    class RecordType << (E,#FFC107) >> {
+      <<enumeration>>
+      MAINTENANCE
+      REPAIR
+      FUEL
+      INSURANCE
+      OTHER
+    }
+
+    class RecordStatus << (E,#FFC107) >> {
+      <<enumeration>>
+      ACTIVE
+      COMPLETED
+      PENDING
+      CANCELLED
+    }
+
+    class Priority << (E,#FFC107) >> {
+      <<enumeration>>
+      HIGH
+      MEDIUM
+      LOW
+    }
+
+    class HistoryEntry << (M,#FF9800) >> {
+      - LocalDate date
+      - String action
+    }
+  }
+
+  package "dao" as dao {
+    interface CarRecordDAO << (I,#F44336) >> {
+      + findAll()
+      + findById()
+      + save()
+      + update()
+      + delete()
+      + findByStatus()
+      + findByType()
+    }
+
+    class XmlCarRecordDAO << (D,#E91E63) >> {
+      - XmlMapper xmlMapper
+      - List<CarRecord> records
+      + loadRecords()
+      + saveRecords()
+    }
+  }
+
+  package "util" as util {
+    class LocalDateModule << (U,#9E9E9E) >> {
+      + LocalDateSerializer
+      + LocalDateDeserializer
+    }
+  }
+}
+
+' Связи между классами
+MainController --> CarRecordService
+CarRecordService --> CarRecordDAO
+CarRecordService --> CarRecord
+XmlCarRecordDAO ..|> CarRecordDAO
+CarRecord --> RecordType
+CarRecord --> RecordStatus
+CarRecord --> Priority
+CarRecord --> HistoryEntry
+
+' Стили пакетов
+skinparam package {
+  BackgroundColor<<main>> White
+  BorderColor<<main>> Black
+}
+
+skinparam class {
+  BackgroundColor<<C>> CONTROLLER
+  BackgroundColor<<S>> SERVICE
+  BackgroundColor<<M>> MODEL
+  BackgroundColor<<D>> DAO
+  BackgroundColor<<I>> DAO
+  BackgroundColor<<E>> MODEL
+  BackgroundColor<<U>> UTIL
+  BorderColor Black
+  ArrowColor Black
+}
+
+@enduml

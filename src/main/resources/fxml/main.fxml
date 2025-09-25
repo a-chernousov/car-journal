@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.carjournal.controller.MainController">
+    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+    <spacing>10</spacing>
+
+    <Label text="Автомобильный журнал" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10">
+        <VBox spacing="10" prefWidth="400">
+            <Label text="Добавить/Редактировать запись:" style="-fx-font-weight: bold;"/>
+
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="100"/>
+                    <ColumnConstraints prefWidth="300"/>
+                </columnConstraints>
+
+                <Label text="Название:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="titleField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Описание:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextArea fx:id="descriptionField" prefRowCount="3" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Тип:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="typeComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Стоимость:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="costField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Пробег:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextField fx:id="mileageField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                <Label text="Дата:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <DatePicker fx:id="datePicker" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                <Label text="Срок выполнения:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <DatePicker fx:id="dueDatePicker" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                <Label text="Статус:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="statusComboBox" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                <Label text="Приоритет:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="priorityComboBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+                <Label text="Количество топлива:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+                <TextField fx:id="fuelAmountField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+
+                <Label text="Цена топлива:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+                <TextField fx:id="fuelPriceField" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <HBox spacing="10">
+                <Button text="Добавить" onAction="#handleAddRecord" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="Обновить" onAction="#handleUpdateRecord" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                <Button text="Удалить" onAction="#handleDeleteRecord" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                <Button text="Очистить" onAction="#clearForm" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+
+        <VBox spacing="10" prefWidth="600">
+            <HBox spacing="10">
+                <TextField fx:id="searchField" promptText="Поиск..." prefWidth="300"/>
+                <Button text="Поиск" onAction="#handleSearch"/>
+                <Button text="Обновить статусы" onAction="#handleUpdateStatuses"/>
+            </HBox>
+
+            <TableView fx:id="recordsTable" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="titleColumn" text="Название" prefWidth="150"/>
+                    <TableColumn fx:id="typeColumn" text="Тип" prefWidth="120"/>
+                    <TableColumn fx:id="costColumn" text="Стоимость" prefWidth="100"/>
+                    <TableColumn fx:id="dateColumn" text="Дата" prefWidth="100"/>
+                    <TableColumn fx:id="statusColumn" text="Статус" prefWidth="100"/>
+                </columns>
+            </TableView>
+
+            <VBox spacing="5">
+                <Label fx:id="costPerKmLabel" text="Стоимость владения: 0.00 руб/км"/>
+                <Label fx:id="nextMaintenanceLabel" text="Прогноз ТО: не рассчитан"/>
+
+                <Label text="Аномалии расхода топлива:" style="-fx-font-weight: bold;"/>
+                <ListView fx:id="anomaliesListView" prefHeight="100"/>
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>
