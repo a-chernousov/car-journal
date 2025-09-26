@@ -7,43 +7,76 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс представляет запись об операции с автомобилем.
+ * Содержит информацию о типе операции, стоимости, пробеге, датах и истории изменений.
+ */
 public class CarRecord {
+    /**
+     * Уникальный идентификатор записи
+     */
     @JsonProperty("id")
     private String id;
 
+    /**
+     * Название операции (например, "Замена масла")
+     */
     @JsonProperty("title")
     private String title;
-
+    /**
+     * Полное описание операции
+     */
     @JsonProperty("description")
     private String description;
-
+    /**
+     * Тип операции (ТО, ремонт, заправка и т.д.)
+     */
     @JsonProperty("type")
     private RecordType type;
-
+    /**
+     * Стоимость операции в рублях
+     */
     @JsonProperty("cost")
     private double cost;
-
+    /**
+     * Пробег автомобиля на момент операции
+     */
     @JsonProperty("mileage")
     private double mileage;
 
+    /**
+     * Дата выполнения операции
+     */
     @JsonProperty("date")
     private LocalDate date;
-
+    /**
+     * Срок выполнения для отложенных операций
+     */
     @JsonProperty("dueDate")
     private LocalDate dueDate;
-
+    /**
+     * Статус выполнения операции
+     */
     @JsonProperty("status")
     private RecordStatus status;
-
+    /**
+     * Приоритет операции
+     */
     @JsonProperty("priority")
     private Priority priority;
-
+    /**
+     * Количество заправленного топлива (для операций типа FUEL)
+     */
     @JsonProperty("fuelAmount")
     private double fuelAmount;
-
+    /**
+     * Цена топлива за литр (для операций типа FUEL)
+     */
     @JsonProperty("fuelPrice")
     private double fuelPrice;
-
+    /**
+     * История изменений записи
+     */
     @JsonProperty("history")
     private List<HistoryEntry> history;
 
@@ -93,7 +126,10 @@ public class CarRecord {
 
     public List<HistoryEntry> getHistory() { return history; }
     public void setHistory(List<HistoryEntry> history) { this.history = history; }
-
+    /**
+     * Добавляет запись в историю изменений
+     * @param action Описание выполненного действия
+     */
     public void addHistoryEntry(String action) {
         this.history.add(new HistoryEntry(LocalDate.now(), action));
     }

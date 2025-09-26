@@ -10,7 +10,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.time.LocalDate;
 import java.util.Optional;
-
+/**
+ * Контроллер главного окна приложения.
+ * Управляет пользовательским интерфейсом и обрабатывает действия пользователя.
+ */
 public class MainController {
     @FXML private TableView<CarRecord> recordsTable;
     @FXML private TableColumn<CarRecord, String> titleColumn;
@@ -40,6 +43,9 @@ public class MainController {
     private ObservableList<CarRecord> records;
     private boolean initialized = false;
 
+    /**
+     * Инициализация контроллера после загрузки FXML
+     */
     @FXML
     public void initialize() {
         setupTableColumns();
@@ -49,7 +55,10 @@ public class MainController {
         datePicker.setValue(LocalDate.now());
         initialized = true;
     }
-
+    /**
+     * Устанавливает сервис для работы с данными
+     * @param service сервис автомобильных записей
+     */
     public void setCarRecordService(CarRecordService service) {
         this.carRecordService = service;
         if (initialized && carRecordService != null) {
@@ -59,7 +68,9 @@ public class MainController {
     }
 
 
-
+    /**
+     * Обрабатывает добавление новой записи
+     */
     private void setupTableColumns() {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -113,7 +124,9 @@ public class MainController {
             showAlert("Успех", "Запись успешно добавлена", Alert.AlertType.INFORMATION);
         }
     }
-
+    /**
+     * Обрабатывает обновление существующей записи
+     */
     @FXML
     private void handleUpdateRecord() {
         CarRecord selected = recordsTable.getSelectionModel().getSelectedItem();
@@ -130,7 +143,9 @@ public class MainController {
             showAlert("Ошибка", "Выберите запись для редактирования", Alert.AlertType.WARNING);
         }
     }
-
+    /**
+     * Обрабатывает удаление записи
+     */
     @FXML
     private void handleDeleteRecord() {
         CarRecord selected = recordsTable.getSelectionModel().getSelectedItem();
@@ -152,7 +167,9 @@ public class MainController {
             showAlert("Ошибка", "Выберите запись для удаления", Alert.AlertType.WARNING);
         }
     }
-
+    /**
+     * Выполняет поиск записей по введенному тексту
+     */
     @FXML
     private void handleSearch() {
         String query = searchField.getText();
@@ -260,7 +277,9 @@ public class MainController {
             return 0.0;
         }
     }
-
+    /**
+     * Обновляет статистические показатели на интерфейсе
+     */
     private void updateStatistics() {
         if (carRecordService == null) return;
 

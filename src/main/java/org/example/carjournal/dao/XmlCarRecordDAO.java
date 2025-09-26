@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+/**
+ * Реализация DAO для работы с XML-хранилищем записей об операциях с автомобилем.
+ * Использует Jackson XML для сериализации/десериализации данных.
+ */
 public class XmlCarRecordDAO implements CarRecordDAO {
     private static final String FILE_PATH = "car_records.xml";
     private final XmlMapper xmlMapper;
@@ -31,7 +34,10 @@ public class XmlCarRecordDAO implements CarRecordDAO {
 
         this.records = loadRecords();
     }
-
+    /**
+     * Загружает записи из XML-файла
+     * @return список загруженных записей
+     */
     private List<CarRecord> loadRecords() {
         File file = new File(FILE_PATH);
         if (!file.exists() || file.length() == 0) {
@@ -59,7 +65,9 @@ public class XmlCarRecordDAO implements CarRecordDAO {
             return new ArrayList<>();
         }
     }
-
+    /**
+     * Сохраняет все записи в XML-файл
+     */
     private void saveRecords() {
         try {
             File file = new File(FILE_PATH);
@@ -76,19 +84,29 @@ public class XmlCarRecordDAO implements CarRecordDAO {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Находит все записи в хранилище
+     * @return список всех записей
+     */
     @Override
     public List<CarRecord> findAll() {
         return new ArrayList<>(records);
     }
-
+    /**
+     * Находит запись по идентификатору
+     * @param id идентификатор записи
+     * @return Optional с найденной записью
+     */
     @Override
     public Optional<CarRecord> findById(String id) {
         return records.stream()
                 .filter(record -> record.getId() != null && record.getId().equals(id))
                 .findFirst();
     }
-
+    /**
+     * Сохраняет новую запись в хранилище
+     * @param record объект записи для сохранения
+     */
     @Override
     public void save(CarRecord record) {
         if (record.getId() == null) {

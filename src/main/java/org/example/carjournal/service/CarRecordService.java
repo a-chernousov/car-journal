@@ -9,37 +9,64 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+/**
+ * Сервисный слой для работы с записями об операциях с автомобилем.
+ * Содержит бизнес-логику приложения.
+ */
 public class CarRecordService {
     private final CarRecordDAO carRecordDAO;
-
+    /**
+     * Конструктор сервиса
+     * @param carRecordDAO объект для доступа к данным
+     */
     public CarRecordService(CarRecordDAO carRecordDAO) {
         this.carRecordDAO = carRecordDAO;
     }
-
+    /**
+     * Получает все записи об операциях
+     * @return список всех записей
+     */
     public List<CarRecord> getAllRecords() {
         return carRecordDAO.findAll();
     }
-
+    /**
+     * Находит запись по идентификатору
+     * @param id уникальный идентификатор записи
+     * @return Optional с найденной записью или empty если не найдена
+     */
     public Optional<CarRecord> getRecordById(String id) {
         return carRecordDAO.findById(id);
     }
-
+    /**
+     * Добавляет новую запись об операции
+     * @param record объект записи для добавления
+     */
     public void addRecord(CarRecord record) {
         record.addHistoryEntry("Запись создана");
         carRecordDAO.save(record);
     }
-
+    /**
+     * Обновляет существующую запись
+     * @param record объект записи с обновленными данными
+     */
     public void updateRecord(CarRecord record) {
         record.addHistoryEntry("Запись обновлена");
         carRecordDAO.update(record);
     }
-
+    /**
+     * Удаляет запись по идентификатору
+     * @param id уникальный идентификатор записи для удаления
+     */
     public void deleteRecord(String id) {
         carRecordDAO.delete(id);
     }
 
-    // Функция 1: Прогноз ТО
+    /**
+     * Рассчитывает дату следующего технического обслуживания
+     * @param currentMileage текущий пробег автомобиля
+     * @param lastMaintenanceDate дата последнего ТО
+     * @return прогнозируемая дата следующего ТО
+     */
     public LocalDate calculateNextMaintenance(double currentMileage, LocalDate lastMaintenanceDate) {
         double nextMileage = currentMileage + 15000;
         LocalDate nextDateByTime = lastMaintenanceDate.plusYears(1);
@@ -52,7 +79,10 @@ public class CarRecordService {
         return nextDateByTime.isBefore(nextDateByMileage) ? nextDateByTime : nextDateByMileage;
     }
 
-    // Функция 2: Стоимость владения
+    /**
+     * Рассчитывает стоимость владения автомобилем в рублях за километр
+     * @return стоимость в руб/км
+     */
     public double calculateCostPerKm() {
         List<CarRecord> records = carRecordDAO.findAll();
         if (records.isEmpty()) return 0.0;
@@ -69,7 +99,11 @@ public class CarRecordService {
         return totalCost / maxMileage;
     }
 
-    // Функция 3: Аномалии расхода топлива (исправлено toList() на collect(Collectors.toList()))
+
+    /**
+     * Находит аномалии расхода топлива на основе записей о заправках
+     * @return список записей с аномальным расходом топлива
+     */
     public List<CarRecord> findFuelAnomalies() {
         List<CarRecord> fuelRecords = carRecordDAO.findAll().stream()
                 .filter(record -> record.getType().name().equals("FUEL"))
@@ -93,7 +127,11 @@ public class CarRecordService {
 
         return anomalies;
     }
-
+    /**
+     * Выполняет поиск записей по ключевым словам
+     * @param query строка поиска
+     * @return список найденных записей
+     */
     public List<CarRecord> searchRecords(String query) {
         return carRecordDAO.findAll().stream()
                 .filter(record -> containsIgnoreCase(record.getTitle(), query) ||
@@ -105,7 +143,9 @@ public class CarRecordService {
     public List<CarRecord> filterByStatus(RecordStatus status) {
         return carRecordDAO.findByStatus(status.name());
     }
-
+    /**
+     * Обновляет статусы записей (например, помечает просроченные)
+     */
     public void updateStatuses() {
         List<CarRecord> records = carRecordDAO.findAll();
         LocalDate today = LocalDate.now();
